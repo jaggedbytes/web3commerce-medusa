@@ -2,9 +2,27 @@ import ChevronDown from "@modules/common/icons/chevron-down"
 import clsx from "clsx"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { MEDUSA_BACKEND_URL } from "@lib/config"
 
 const AccountNav = () => {
   const { route } = useRouter()
+  const router = useRouter()
+
+  function onClick(e: any) {
+    e.preventDefault()
+    fetch(MEDUSA_BACKEND_URL + '/store/auth', {
+      method: 'delete',
+      credentials: 'include'
+    })
+      .then(() => {
+        alert("Logged out successfully")
+        router.reload()
+      })
+      .catch((e) => {
+        console.error(e)
+        alert("An error occurred")
+      })
+  }
 
   return (
     <div>
@@ -44,6 +62,11 @@ const AccountNav = () => {
                 <AccountNavLink href="/account/orders" route={route}>
                   Orders
                 </AccountNavLink>
+              </li>
+              <li>
+                <button className="text-gray-700" onClick={onClick}>
+                  Logout
+                </button>
               </li>
             </ul>
           </div>
